@@ -27,7 +27,6 @@ func writeLine(f *os.File, line string) {
 }
 
 func writeCommandData(targetDir string, cwd string, sourceFileName string, args []string) {
-
 	if !path.IsAbs(sourceFileName) {
 		sourceFileName = path.Join(cwd, sourceFileName)
 	}
@@ -45,15 +44,18 @@ func writeCommandData(targetDir string, cwd string, sourceFileName string, args 
 
 	writeLine(f, cwd)
 	writeLine(f, sourceFileName)
-	writeLine(f, strings.Join(args, "$"))
+	for _, opt := range args {
+		writeLine(f, opt)
+	}
 }
 
 func main() {
-	var defaultCompiler = os.Getenv("CCSPY_COMPILER")
+	var defaultCCompiler = os.Getenv("CCSPY_CC")
+	var defaultCppCompiler = os.Getenv("CCSPY_CXX")
 	var defaultTargetDir = os.Getenv("CCSPY_TARGET_DIR")
 	var args = os.Args[1:]
-	var compilerCommand = defaultCompiler
 	var targetDirectory = defaultTargetDir
+	var compilerCommand string
 
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -74,7 +76,7 @@ func main() {
 		counter++
 	}
 	args = args[counter:]
-	if len(compilerCommand) == 0 {
+	if len(compilerCommand) == 0 && len(defaultCCompiler) == 0 && len(defaultCppCompiler) == 0 {
 		// Use prefix mode, ccspy is just inserted as the first element of the command line
 		if len(args) == 0 {
 			log.Fatal("ccspy requires at least one parameter")
@@ -95,22 +97,42 @@ func main() {
 
 	var sources = make([]string, 0, 1)
 	var argsWithoutSources = make([]string, 0, len(args))
+	var cppCount = 0
+	var cCount = 0
 
 	for _, arg := range args {
 		if strings.HasPrefix(arg, "-") {
 			argsWithoutSources = append(argsWithoutSources, arg)
 			continue
 		}
+		isSource := false
 		for _, ext := range getExtensions() {
 			if strings.HasSuffix(arg, ext) {
 				sources = append(sources, arg)
-			} else {
-				argsWithoutSources = append(argsWithoutSources, arg)
+				if ext == ".c" {
+					cCount++
+				} else {
+					cppCount++
+				}
+				isSource = true
+				break
 			}
+		}
+		if !isSource {
+			argsWithoutSources = append(argsWithoutSources, arg)
 		}
 	}
 	for _, src := range sources {
 		writeCommandData(targetDirectory, cwd, src, argsWithoutSources)
+	}
+	if len(compilerCommand) == 0 {
+		if cppCount > 0 {
+			compilerCommand = defaultCppCompiler
+		} else if cCount > 0 {
+			compilerCommand = defaultCCompiler
+		} else {
+			compilerCommand = defaultCppCompiler
+		}
 	}
 
 	var cmd = exec.Command(compilerCommand, args...)
