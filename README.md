@@ -26,7 +26,7 @@ forces all your source files to be compiled via `ccspy`. The result will be one 
 the `ccspy` target directory, which then will be used by `Sonargraph` to retrieve the options needed to for analyzing
 each compilation unit correctly.
 
-Keep that configuration as long as you use Sonargrah. If you add new comoilation units they will be added automatically
+Keep that configuration as long as you use Sonargrah. If you add new compilation units they will be added automatically
 to Sonargraph's analysis.
 
 ## Configuration
