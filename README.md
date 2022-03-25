@@ -10,7 +10,7 @@ and the compiler. For each compilation unit it records all command line options 
 redirecting the call to the actual compiler. This target directory should be located parallel to the Sonargraph system directory 
 of the system to be analyzed.
 
-## Installion
+## Installation
 If you have go installed on your machine you can simply call
 
 `go install github.com/sonargraph/ccspy`
