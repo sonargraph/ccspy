@@ -41,8 +41,8 @@ are 3 modes of configuration:
 ## Command line Arguments
 Command line options for `ccspy` always have to be the first parameters in the command line.These are the 
 supported command line arguments:
-- `-ccspyTargetDir=<path to the target directory\>`
-- `-ccspyCompiler=<name of your comoiler, e.g. gcc\>`
+- `-ccspyTargetDir=<path to the target directory>`
+- `-ccspyCompiler=<name of your compiler, e.g. gcc>`
 
 Example:
 
