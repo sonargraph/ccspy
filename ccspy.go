@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"runtime"
 	"strings"
 	"sync"
 )
@@ -24,7 +25,11 @@ func writeLine(f *os.File, line string) error {
 }
 
 func writeCommandData(targetDir string, cwd string, sourceFileName string, args []string) {
-	if !path.IsAbs(sourceFileName) {
+	if runtime.GOOS == "windows" {
+		if sourceFileName[1] != ':' {
+			sourceFileName = path.Join(cwd, sourceFileName)
+		}
+	} else if !path.IsAbs(sourceFileName) {
 		sourceFileName = path.Join(cwd, sourceFileName)
 	}
 
