@@ -6,8 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"path"
-	"runtime"
+	"path/filepath"
 	"strings"
 	"sync"
 )
@@ -25,16 +24,13 @@ func writeLine(f *os.File, line string) error {
 }
 
 func writeCommandData(targetDir string, cwd string, sourceFileName string, args []string) {
-	if runtime.GOOS == "windows" {
-		if sourceFileName[1] != ':' {
-			sourceFileName = path.Join(cwd, sourceFileName)
-		}
-	} else if !path.IsAbs(sourceFileName) {
-		sourceFileName = path.Join(cwd, sourceFileName)
+	if !filepath.IsAbs(sourceFileName) {
+		sourceFileName = filepath.Join(cwd, sourceFileName)
 	}
-
+	sourceFileName = filepath.Clean(sourceFileName)
+	
 	var fileName = getMD5Hash(sourceFileName) + ".txt"
-	var filePath = path.Join(targetDir, fileName)
+	var filePath = filepath.Join(targetDir, fileName)
 
 	// create file
 	f, err := os.Create(filePath)
