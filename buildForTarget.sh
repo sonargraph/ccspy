@@ -1,0 +1,1 @@
+env GOOS=$1 GOARCH=$2 go build -o bin/$1_$2/ccspy

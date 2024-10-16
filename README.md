@@ -15,7 +15,7 @@ If you have go installed on your machine you can simply call
 
 `go install github.com/sonargraph/ccspy`
 
-The tool is open source and you can inspect the code on Github. It is also distributed with your Sonargraph installation 
+The tool is open source, and you can inspect the code on Github. It is also distributed with your Sonargraph installation 
 and can be found in the `bin` directory. On a Mac you have to open the package contents of the Sonargraph app to 
 find it. Then make sure that the location of `ccspy` is added to your `PATH` environment variable.
 
